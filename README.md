@@ -4,7 +4,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+# clone repository from GitHub
+
+git clone git@github.com:hassandiv/pokemon-v2.git
+
 In the project directory, you can run:
+
+### `npm install`
 
 ### `npm start`
 
