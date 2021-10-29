@@ -27,7 +27,6 @@ const Home = () => {
                         status: false
                     })
                 }
-                console.log('res', res)
             })
             .catch(err => {
                 if (err.response && err.response.status > 300) {
@@ -37,7 +36,6 @@ const Home = () => {
                         status: true
                     })
                 }
-                console.log('err', err.response)
             })
     }, [])
 
