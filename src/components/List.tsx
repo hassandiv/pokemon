@@ -1,7 +1,6 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import axios from 'axios'
 
 //CSS
 const StyledMain = styled.main`
@@ -157,33 +156,25 @@ type IPokedexProps = {
     props: {
         results?: [] | undefined
     }
+    error?: {
+        code: number | null
+        status: boolean | null
+    }
+    loading?: boolean
 }
 type IProps = {
-    name: string,
+    name: string
     url: string
-}
-type IPokemonProps = {
-    sprites?: {
-        front_default: string
-    }
+    id: number
 }
 
-const List: FC<IPokedexProps> = ({props}) => {
+const List: FC<IPokedexProps> = ({props, error, loading}) => {
 
     const [limit, setLimit] = useState<number>(12)
     const { results } = props
-    const sliceResults = results?.slice(0, limit)
-    const [pokemonImage, setPokemonImage] = useState<IPokemonProps>({})
-    const [pokemonName, setPokemonName] = useState<string>('')
-    const [loading, setLoading] = useState<boolean>(false)
     const [loadMoreItems, setLoadMoreItems] = useState<boolean>(false)
-    const [error, setError] = useState<{ code: number | null, status: boolean | null }>({
-        code: null,
-        status: null
-    })
+    const sliceResults = results?.slice(0, limit)
 
-    console.log('pokemonImage', pokemonImage)
-    console.log('pokemonName', pokemonName)
     
     const loadMore = (e: React.UIEvent<HTMLUListElement>): void => {
         const { scrollTop, clientHeight, scrollHeight } = e.currentTarget
@@ -200,42 +191,6 @@ const List: FC<IPokedexProps> = ({props}) => {
         }
     }
 
-    //single pokemon image
-    useEffect(() => {
-        setLoading(true)
-        //const name = () => {
-            sliceResults && sliceResults.map((pokemon: IProps) => {
-                const pokeName: string = pokemon.name
-                setPokemonName(pokeName)
-                //return pokeName
-            })
-        //}
-        axios.get<IPokemonProps>(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
-            .then( res => {
-                if (res.status < 300) {
-                    setLoading(false)
-                    setPokemonImage(res.data)
-                    setError({
-                        code: res.status,
-                        status: false
-                    })
-                    setLoadMoreItems(true)
-                }
-                console.log('resPokeName', res)
-            })
-            .catch(err => {
-                if (err.response && err.response.status > 300) {
-                    setLoading(false)
-                    setError({
-                        code: err.response.status,
-                        status: true
-                    })
-                    setLoadMoreItems(false)
-                }
-                console.log('err', err.response)
-            })
-    }, [])
-
     return (
         <StyledMain>
             <StyledLogo alt="pokeApi" src="./pokelogo.png" />
@@ -250,7 +205,6 @@ const List: FC<IPokedexProps> = ({props}) => {
                             {sliceResults && sliceResults.map((pokemon: IProps, idx: number) => (
                                 <StyledReactLink to={`/${pokemon.name}`} key={idx}>
                                     <StyledLi>
-                                        {/* <StyledImg alt={pokemon.name} src={pokemonImage?.sprites?.front_default || `./ pokeball.png`} /> */}
                                         <StyledPokeImg alt={pokemon.name} src={`./pokeball.png`} />
                                         <StyledP>{pokemon.name}</StyledP>
                                     </StyledLi>

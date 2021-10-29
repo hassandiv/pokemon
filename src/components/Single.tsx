@@ -1,5 +1,4 @@
 import React, { FC, useState, useEffect } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
 import axios from 'axios'
 import styled from 'styled-components'
 
@@ -141,6 +140,11 @@ const StyledWH = styled.div`
     flex-direction: column;
     align-items: center;
 `
+const StyledError = styled.p`
+   font-size: 16px;
+   padding: 0px 20px;
+`
+
 //TypeScript
 type IPokemonProps = {
     id?: number
@@ -167,33 +171,10 @@ type IPokemonProps = {
             name: string
         }
     }]
+    matchUrl?: string 
 }
 
-// interface MatchParams {
-//     name: string
-// }
-
-// interface RouteComponentProps<P> {
-//   match: match<P>;
-//     //location: H.Location;
-//     //history: H.History;
-//     //staticContext?: any;
-// }
-
-// interface match<P> {
-//   params: P
-// //   isExact: boolean;
-// //   path: string;
-// //   url: string;
-// }
-
-// type IProps = {
-//     name: string,
-//     url: string
-// }
-
-//const Single: FC<IPokemonProps> = ({ match }: RouteComponentProps<MatchParams>): JSX.Element => {
-const Single: FC<IPokemonProps> = ({ match }: any) => {
+const Single: FC<IPokemonProps> = ({ matchUrl }): JSX.Element => {
 
     const [pokemon, setPokemon] = useState<IPokemonProps>({})
     const [loading, setLoading] = useState<boolean>(false)
@@ -204,7 +185,7 @@ const Single: FC<IPokemonProps> = ({ match }: any) => {
     
     useEffect(() => {
         setLoading(true)
-        axios.get<IPokemonProps>(`https://pokeapi.co/api/v2/pokemon/${match.params.name}`)
+        axios.get<IPokemonProps>(`https://pokeapi.co/api/v2/pokemon/${matchUrl}`)
             .then( res => {
                 if (res.status < 300) {
                     setLoading(false)
@@ -214,7 +195,6 @@ const Single: FC<IPokemonProps> = ({ match }: any) => {
                         status: false
                     })
                 }
-                console.log('res', res)
             })
             .catch(err => {
                 if (err.response && err.response.status > 300) {
@@ -224,7 +204,6 @@ const Single: FC<IPokemonProps> = ({ match }: any) => {
                         status: true
                     })
                 }
-                console.log('err', err.response)
             })
     }, [])
 
@@ -234,11 +213,12 @@ const Single: FC<IPokemonProps> = ({ match }: any) => {
     const pokeHeight: number | undefined = pokemon?.height
     const height = pokeHeight ? pokeHeight / 10 : undefined
 
-
     return (
         <StyledSection>
             {   loading ? 
                 <StyledImg src={`./pokeball.png`} />
+            :   error?.code && error?.code > 300 ?
+                <StyledError><b>{error?.code}</b>. That's an error.<br></br>The server encountered a temporary error and could not complete your request. Please try again in 30 seconds.</StyledError>
             :
                 <React.Fragment>
                     <StyledCard>

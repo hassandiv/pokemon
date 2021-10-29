@@ -9,15 +9,18 @@ type IPokedex = {
 const Home = () => {
 
     const [pokedex, setPokdex] = useState<IPokedex>({})
+    const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<{ code: number | null, status: boolean | null }>({
         code: null,
         status: null
     })
     
     useEffect(() => {
+        setLoading(true)
         axios.get<IPokedex>(`https://pokeapi.co/api/v2/pokemon?&limit=151`)
             .then( res => {
                 if (res.status < 300) {
+                    setLoading(false)
                     setPokdex(res.data)
                     setError({
                         code: res.status,
@@ -28,6 +31,7 @@ const Home = () => {
             })
             .catch(err => {
                 if (err.response && err.response.status > 300) {
+                    setLoading(false)
                     setError({
                         code: err.response.status,
                         status: true
@@ -38,7 +42,11 @@ const Home = () => {
     }, [])
 
     return (
-        <List props={pokedex} />
+        <List
+            props={pokedex}
+            error={error}
+            loading={loading}
+        />
     )
 
 }
