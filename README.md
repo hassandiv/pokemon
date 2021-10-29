@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## clone repository from GitHub
 
-### `git clone git@github.com:hassandiv/pokemon-v2.git`
+### `git clone git@github.com:hassandiv/pokemon.git`
 
 In the project directory, you can run:
 
