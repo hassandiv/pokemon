@@ -205,7 +205,7 @@ const Single: FC<IPokemonProps> = ({ matchUrl }): JSX.Element => {
                     })
                 }
             })
-    }, [])
+    }, [matchUrl])
 
     const pokeWeight: number | undefined = pokemon?.weight
     const weight = pokeWeight ? pokeWeight / 10 : undefined

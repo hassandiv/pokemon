@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import List from './List'
 import axios from 'axios'
 
@@ -6,7 +6,7 @@ type IPokedex = {
     results?: [] | undefined,
 }
 
-const Home = () => {
+const Home: FC = () => {
 
     const [pokedex, setPokdex] = useState<IPokedex>({})
     const [loading, setLoading] = useState<boolean>(false)
